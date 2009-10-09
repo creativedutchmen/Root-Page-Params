@@ -1,0 +1,5 @@
+Root Page Params
+Version 1.0
+Written by Huib Keemink
+
+Adds the ability to add parameters to the root page (for instance: www.domain.com/params instead of www.domain.com/home/params)
