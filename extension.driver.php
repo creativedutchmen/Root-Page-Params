@@ -3,7 +3,7 @@
 	require_once(TOOLKIT . '/class.entrymanager.php');
 	
 	
-	Class extension_Root-Page-Params extends Extension{
+	Class extension_map_to_front extends Extension{
 	
 		protected $section_data;
 		protected $_page;
@@ -12,7 +12,7 @@
 		static $alreadyRan = false;
 		
 		public function about(){
-			return array('name' => 'Root page params',
+			return array('name' => 'Map to front',
 						 'version' => '1.0',
 						 'release-date' => '2009-10-05',
 						 'author' => array('name' => 'Huib Keemink',
