@@ -1,6 +1,7 @@
 #Root Page Params
 
 Version 1.1
+
 Written by Huib Keemink
 
 ## Intoduction
@@ -13,4 +14,6 @@ Place the folder in your extensions directory, then rename the folder to root_pa
 
 ##Configuration
 
-This version of the extension supports any page, not just the home page as in previous releases. To set this page, go to the system->preferences page, and select the page from there.
+This version of the extension supports any page, not just the home page as in previous releases.
+
+To set this page, go to the system->preferences page, and select the page from there.
