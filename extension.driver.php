@@ -3,7 +3,7 @@
 	require_once(TOOLKIT . '/class.entrymanager.php');
 	
 	
-	Class extension_map_to_front extends Extension{
+	Class extension_root_page_params extends Extension{
 	
 		protected $section_data;
 		protected $_page;
@@ -12,9 +12,9 @@
 		static $alreadyRan = false;
 		
 		public function about(){
-			return array('name' => 'Map to front',
-						 'version' => '1.0',
-						 'release-date' => '2009-10-05',
+			return array('name' => 'Root page params',
+						 'version' => '1.1',
+						 'release-date' => '2009-12-10',
 						 'author' => array('name' => 'Huib Keemink',
 										   'website' => 'http://www.creativedutchmen.com',
 										   'email' => 'huib@creativedutchmen.com')
@@ -27,6 +27,11 @@
 							'page' => '/frontend/',
 							'delegate' => 'FrontendPrePageResolve',
 							'callback' => 'addPage'
+						),
+						array(
+						'page' => '/system/preferences/',
+						'delegate' => 'AddCustomPreferenceFieldsets',
+						'callback' => 'append_preferences'
 						)
 			);
 		}
@@ -40,8 +45,14 @@
 				$front = FrontEnd::Page();
 				
 				if(!$front->resolvePage($context['page'])){
-					$indexPage = $this->__getIndexPage();
-					$indexHandle = $indexPage['handle'];
+					//uses home page if no page is set in the config panel.
+					if($this->_get_fallback() == ''){
+						$indexPage = $this->__getIndexPage();
+						$indexHandle = $indexPage['handle'];
+					}
+					else{
+						$indexHandle = $this->_get_fallback();
+					}
 					
 					//adds the home page to the handle, if the current page is not found.
 					//requires the home page to fallback to a 404 if the params do not match, otherwise no 404 error will ever be created.
@@ -49,6 +60,23 @@
 				}
 			}
 			
+		}
+		
+		
+		public function append_preferences(&$context)
+		{
+			# Add new fieldset
+			$group = new XMLElement('fieldset');
+			$group->setAttribute('class', 'settings');
+			$group->appendChild(new XMLElement('legend', 'Map to front'));
+
+			# Add Site Reference field
+			$label = Widget::Label('Fallback page');
+			$label->appendChild(Widget::Input('settings[maptofront][fallback]', General::Sanitize($this->_get_fallback())));
+			$group->appendChild($label);
+			$group->appendChild(new XMLElement('p', 'The page to append the parameters to. Leave empty for home (default).', array('class' => 'help')));
+			
+			$context['wrapper']->appendChild($group);
 		}
 		
 		//any way to get this without using the database?
@@ -60,6 +88,14 @@
 			return $row;
 		}
 		
+		function _get_fallback(){
+			$default_fallback = '';
+			if(class_exists('ConfigurationAccessor')){
+				$val = ConfigurationAccessor::get('fallback', 'maptofront');
+				return (isset($val)) ? $val : $default_falllback;
+			}
+			$val = $this->_Parent->Configuration->get('fallback', 'maptofront');
+			return (isset($val)) ? $val : $default_fallback;
+		}
+		
 	}
-
-?>
