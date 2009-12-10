@@ -71,8 +71,48 @@
 			$group->appendChild(new XMLElement('legend', 'Map to front'));
 
 			# Add Site Reference field
-			$label = Widget::Label('Fallback page');
-			$label->appendChild(Widget::Input('settings[maptofront][fallback]', General::Sanitize($this->_get_fallback())));
+			//$label = Widget::Label('Fallback page');
+			//$label->appendChild(Widget::Input('settings[maptofront][fallback]', General::Sanitize($this->_get_fallback())));
+			
+			//try to add a select box for the page (more user friendly)
+			$label = Widget::Label(__('Page to append parameters to'));
+			
+			$pages = $this->_Parent->Database->fetch("
+				SELECT
+					p.*
+				FROM
+					`tbl_pages` AS p
+				WHERE
+					p.id != '{$page_id}'
+				ORDER BY
+					p.title ASC
+			");
+			
+			$options = array(
+				array('', false, '')
+			);
+			
+			if (is_array($pages) && !empty($pages)) {
+				if (!function_exists('__compare_pages')) {
+					function __compare_pages($a, $b) {
+						return strnatcasecmp($a[2], $b[2]);
+					}
+				}
+				
+				foreach ($pages as $page) {
+					$options[] = array(
+						$this->_Parent->resolvePagePath($page['id']), $this->_Parent->Configuration->get('fallback', 'maptofront') == $this->_Parent->resolvePagePath($page['id']),
+						'/'.$this->_Parent->resolvePagePath($page['id'])
+					);
+				}
+				
+				usort($options, '__compare_pages');
+			}
+			
+			$label->appendChild(Widget::Select(
+				'settings[maptofront][fallback]', $options
+			));
+			
 			$group->appendChild($label);
 			$group->appendChild(new XMLElement('p', 'The page to append the parameters to. Leave empty for home (default).', array('class' => 'help')));
 			
