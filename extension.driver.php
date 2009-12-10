@@ -68,7 +68,7 @@
 			# Add new fieldset
 			$group = new XMLElement('fieldset');
 			$group->setAttribute('class', 'settings');
-			$group->appendChild(new XMLElement('legend', 'Map to front'));
+			$group->appendChild(new XMLElement('legend', 'Root Page Params'));
 
 			# Add Site Reference field
 			//$label = Widget::Label('Fallback page');
