@@ -10,7 +10,7 @@ Adds the ability to add parameters to the root page (for instance: www.domain.co
 
 ##Installation
 
-Place the folder in your extensions directory, then rename the folder to root_page_params (any way to make github do this?). Then enable as usual.
+Place the folder in your extensions directory, then **rename the folder to root_page_params** (any way to make github do this?). Then enable as usual.
 
 ##Configuration
 
