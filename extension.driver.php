@@ -13,7 +13,7 @@
 		
 		public function about(){
 			return array('name' => 'Root page params',
-						 'version' => '1.1',
+						 'version' => '1.2',
 						 'release-date' => '2009-12-10',
 						 'author' => array('name' => 'Huib Keemink',
 										   'website' => 'http://www.creativedutchmen.com',
