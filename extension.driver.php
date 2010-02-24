@@ -29,10 +29,15 @@
 							'callback' => 'addPage'
 						),
 						array(
-						'page' => '/system/preferences/',
-						'delegate' => 'AddCustomPreferenceFieldsets',
-						'callback' => 'append_preferences'
-						)
+							'page' => '/system/preferences/',
+							'delegate' => 'AddCustomPreferenceFieldsets',
+							'callback' => 'append_preferences'
+						),
+						array(
+							'page' => '/system/preferences/',
+							'delegate' => 'Save',
+							'callback' => 'save_settings'
+						),
 			);
 		}
 		
@@ -56,7 +61,18 @@
 					
 					//adds the home page to the handle, if the current page is not found.
 					//requires the home page to fallback to a 404 if the params do not match, otherwise no 404 error will ever be created.
-					$context['page'] = $indexHandle.'/'.$context['page'];
+					
+					//die($context['page']);
+					
+					$params = $context['page'];
+					
+					if($this->_Parent->Configuration->get('map_sub_to_front', 'maptofront') == 'no'){
+						$tmp = substr($indexHandle,0, strrpos($indexHandle, '/'));
+						$params = substr($context['page'], strpos($context['page'], $tmp)+strlen($tmp));
+					}
+					//die($params);
+					
+					$context['page'] = $indexHandle.$params;
 				}
 			}
 			
@@ -116,6 +132,14 @@
 			$group->appendChild($label);
 			$group->appendChild(new XMLElement('p', 'The page to append the parameters to. Leave empty for home (default).', array('class' => 'help')));
 			
+			$label = Widget::Label();
+			$input = Widget::Input('settings[maptofront][map_sub_to_front]', 'yes', 'checkbox');
+			if($this->_Parent->Configuration->get('map_sub_to_front', 'maptofront') == 'yes') $input->setAttribute('checked', 'checked');
+			$label->setValue($input->generate() . ' ' . __('Map supages to home page'));
+			
+			$group->appendChild($label);
+			$group->appendChild(new XMLElement('p', 'Maps subpages to the root page when checked, maps subpages to their parents if unchecked.', array('class' => 'help')));
+			
 			$context['wrapper']->appendChild($group);
 		}
 		
@@ -130,12 +154,16 @@
 		
 		function _get_fallback(){
 			$default_fallback = '';
-			if(class_exists('ConfigurationAccessor')){
-				$val = ConfigurationAccessor::get('fallback', 'maptofront');
-				return (isset($val)) ? $val : $default_falllback;
-			}
 			$val = $this->_Parent->Configuration->get('fallback', 'maptofront');
+			
 			return (isset($val)) ? $val : $default_fallback;
 		}
 		
+		function save_settings($context){
+			if(!isset($context['settings']['maptofront']['map_sub_to_front'])) $context['settings']['maptofront']['map_sub_to_front'] = 'no';
+			
+			if(!isset($context['settings']['maptofront'])){
+				$context['settings']['maptofront'] = array('map_sub_to_front' => 'no');
+			}
+		}
 	}
