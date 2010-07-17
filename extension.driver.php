@@ -99,7 +99,7 @@
 				FROM
 					`tbl_pages` AS p
 				WHERE
-					p.id != '{$page_id}'
+					p.id != '{mysql_real_escape_string($page_id)}'
 				ORDER BY
 					p.title ASC
 			");
