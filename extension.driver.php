@@ -62,16 +62,17 @@
 					//adds the home page to the handle, if the current page is not found.
 					//requires the home page to fallback to a 404 if the params do not match, otherwise no 404 error will ever be created.
 					
-					//die($context['page']);
-					
 					$params = $context['page'];
 					
 					if($this->_Parent->Configuration->get('map_sub_to_front', 'maptofront') == 'no'){
 						$tmp = substr($indexHandle,0, strrpos($indexHandle, '/'));
-						$params = substr($context['page'], strpos($context['page'], $tmp)+strlen($tmp));
+						if(strlen($tmp) > 0){
+							$params = substr($context['page'], strpos($context['page'], $tmp)+strlen($tmp));
+						}
+						else{
+							$params = '';
+						}
 					}
-					//die($params);
-					
 					$context['page'] = $indexHandle.$params;
 				}
 			}
