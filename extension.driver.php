@@ -136,7 +136,7 @@
 			$label = Widget::Label();
 			$input = Widget::Input('settings[maptofront][map_sub_to_front]', 'yes', 'checkbox');
 			if($this->_Parent->Configuration->get('map_sub_to_front', 'maptofront') == 'yes') $input->setAttribute('checked', 'checked');
-			$label->setValue($input->generate() . ' ' . __('Map supages to home page'));
+			$label->setValue($input->generate() . ' ' . __('Map subpages to home page'));
 			
 			$group->appendChild($label);
 			$group->appendChild(new XMLElement('p', 'Maps subpages to the root page when checked, maps subpages to their parents if unchecked.', array('class' => 'help')));
